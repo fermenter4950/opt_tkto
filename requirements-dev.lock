@@ -83,6 +83,7 @@ packaging==24.2
     # via transformers
 pandas==2.2.3
     # via datasets
+    # via ktto
 peft==0.14.0
     # via ktto
 propcache==0.2.1

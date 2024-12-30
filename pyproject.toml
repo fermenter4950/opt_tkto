@@ -9,6 +9,7 @@ dependencies = [
     "transformers>=4.47.1",
     "peft>=0.14.0",
     "trl>=0.13.0",
+    "pandas>=2.2.3",
 ]
 readme = "README.md"
 requires-python = ">= 3.11"
