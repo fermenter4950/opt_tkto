@@ -93,6 +93,7 @@ numpy==2.2.1
     # via datasets
     # via pandas
     # via peft
+    # via torchvision
     # via transformers
 openai==1.58.1
     # via ktto
@@ -107,6 +108,8 @@ pandas==2.2.3
     # via ktto
 peft==0.14.0
     # via ktto
+pillow==11.0.0
+    # via torchvision
 propcache==0.2.1
     # via aiohttp
     # via yarl
@@ -154,7 +157,14 @@ tokenizers==0.21.0
     # via transformers
 torch==2.5.1
     # via accelerate
+    # via ktto
     # via peft
+    # via torchaudio
+    # via torchvision
+torchaudio==2.5.1
+    # via ktto
+torchvision==0.20.1
+    # via ktto
 tqdm==4.67.1
     # via datasets
     # via huggingface-hub
