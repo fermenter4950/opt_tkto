@@ -10,3 +10,141 @@
 #   universal: false
 
 -e file:.
+accelerate==1.2.1
+    # via peft
+    # via trl
+aiohappyeyeballs==2.4.4
+    # via aiohttp
+aiohttp==3.11.11
+    # via datasets
+    # via fsspec
+aiosignal==1.3.2
+    # via aiohttp
+attrs==24.3.0
+    # via aiohttp
+certifi==2024.12.14
+    # via requests
+charset-normalizer==3.4.1
+    # via requests
+datasets==3.2.0
+    # via trl
+dill==0.3.8
+    # via datasets
+    # via multiprocess
+filelock==3.16.1
+    # via datasets
+    # via huggingface-hub
+    # via torch
+    # via transformers
+frozenlist==1.5.0
+    # via aiohttp
+    # via aiosignal
+fsspec==2024.9.0
+    # via datasets
+    # via huggingface-hub
+    # via torch
+huggingface-hub==0.27.0
+    # via accelerate
+    # via datasets
+    # via peft
+    # via tokenizers
+    # via transformers
+idna==3.10
+    # via requests
+    # via yarl
+jinja2==3.1.5
+    # via torch
+markdown-it-py==3.0.0
+    # via rich
+markupsafe==3.0.2
+    # via jinja2
+mdurl==0.1.2
+    # via markdown-it-py
+mpmath==1.3.0
+    # via sympy
+multidict==6.1.0
+    # via aiohttp
+    # via yarl
+multiprocess==0.70.16
+    # via datasets
+networkx==3.4.2
+    # via torch
+numpy==2.2.1
+    # via accelerate
+    # via datasets
+    # via pandas
+    # via peft
+    # via transformers
+packaging==24.2
+    # via accelerate
+    # via datasets
+    # via huggingface-hub
+    # via peft
+    # via transformers
+pandas==2.2.3
+    # via datasets
+peft==0.14.0
+    # via ktto
+propcache==0.2.1
+    # via aiohttp
+    # via yarl
+psutil==6.1.1
+    # via accelerate
+    # via peft
+pyarrow==18.1.0
+    # via datasets
+pygments==2.18.0
+    # via rich
+python-dateutil==2.9.0.post0
+    # via pandas
+pytz==2024.2
+    # via pandas
+pyyaml==6.0.2
+    # via accelerate
+    # via datasets
+    # via huggingface-hub
+    # via peft
+    # via transformers
+regex==2024.11.6
+    # via transformers
+requests==2.32.3
+    # via datasets
+    # via huggingface-hub
+    # via transformers
+rich==13.9.4
+    # via trl
+safetensors==0.4.5
+    # via accelerate
+    # via peft
+    # via transformers
+six==1.17.0
+    # via python-dateutil
+sympy==1.13.1
+    # via torch
+tokenizers==0.21.0
+    # via transformers
+torch==2.5.1
+    # via accelerate
+    # via peft
+tqdm==4.67.1
+    # via datasets
+    # via huggingface-hub
+    # via peft
+    # via transformers
+transformers==4.47.1
+    # via ktto
+    # via peft
+    # via trl
+trl==0.13.0
+    # via ktto
+typing-extensions==4.12.2
+    # via huggingface-hub
+    # via torch
+tzdata==2024.2
+    # via pandas
+urllib3==2.3.0
+    # via requests
+xxhash==3.5.0
+    # via datasets
+yarl==1.18.3
+    # via aiohttp
