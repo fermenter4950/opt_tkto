@@ -10,6 +10,8 @@
 #   universal: false
 
 -e file:.
+absl-py==2.1.0
+    # via tensorboard
 accelerate==1.2.1
     # via peft
     # via trl
@@ -25,26 +27,40 @@ annotated-types==0.7.0
 anyio==4.7.0
     # via httpx
     # via openai
+asttokens==3.0.0
+    # via stack-data
 attrs==24.3.0
     # via aiohttp
+bitsandbytes==0.45.0
+    # via ktto
 certifi==2024.12.14
     # via httpcore
     # via httpx
     # via requests
 charset-normalizer==3.4.1
     # via requests
+comm==0.2.2
+    # via ipykernel
+    # via ipywidgets
 datasets==3.2.0
     # via trl
+debugpy==1.8.11
+    # via ipykernel
+decorator==5.1.1
+    # via ipython
 dill==0.3.8
     # via datasets
     # via multiprocess
 distro==1.9.0
     # via openai
+executing==2.1.0
+    # via stack-data
 filelock==3.16.1
     # via datasets
     # via huggingface-hub
     # via torch
     # via transformers
+    # via triton
 frozenlist==1.5.0
     # via aiohttp
     # via aiosignal
@@ -52,6 +68,8 @@ fsspec==2024.9.0
     # via datasets
     # via huggingface-hub
     # via torch
+grpcio==1.68.1
+    # via tensorboard
 h11==0.14.0
     # via httpcore
 httpcore==1.0.7
@@ -69,14 +87,34 @@ idna==3.10
     # via httpx
     # via requests
     # via yarl
+ipykernel==6.29.5
+ipython==8.31.0
+    # via ipykernel
+    # via ipywidgets
+ipywidgets==8.1.5
+jedi==0.19.2
+    # via ipython
 jinja2==3.1.5
     # via torch
 jiter==0.8.2
     # via openai
+jupyter-client==8.6.3
+    # via ipykernel
+jupyter-core==5.7.2
+    # via ipykernel
+    # via jupyter-client
+jupyterlab-widgets==3.0.13
+    # via ipywidgets
+markdown==3.7
+    # via tensorboard
 markdown-it-py==3.0.0
     # via rich
 markupsafe==3.0.2
     # via jinja2
+    # via werkzeug
+matplotlib-inline==0.1.7
+    # via ipykernel
+    # via ipython
 mdurl==0.1.2
     # via markdown-it-py
 mpmath==1.3.0
@@ -86,36 +124,86 @@ multidict==6.1.0
     # via yarl
 multiprocess==0.70.16
     # via datasets
+nest-asyncio==1.6.0
+    # via ipykernel
 networkx==3.4.2
     # via torch
 numpy==2.2.1
     # via accelerate
+    # via bitsandbytes
     # via datasets
     # via pandas
     # via peft
+    # via tensorboard
     # via torchvision
     # via transformers
+nvidia-cublas-cu12==12.4.5.8
+    # via nvidia-cudnn-cu12
+    # via nvidia-cusolver-cu12
+    # via torch
+nvidia-cuda-cupti-cu12==12.4.127
+    # via torch
+nvidia-cuda-nvrtc-cu12==12.4.127
+    # via torch
+nvidia-cuda-runtime-cu12==12.4.127
+    # via torch
+nvidia-cudnn-cu12==9.1.0.70
+    # via torch
+nvidia-cufft-cu12==11.2.1.3
+    # via torch
+nvidia-curand-cu12==10.3.5.147
+    # via torch
+nvidia-cusolver-cu12==11.6.1.9
+    # via torch
+nvidia-cusparse-cu12==12.3.1.170
+    # via nvidia-cusolver-cu12
+    # via torch
+nvidia-nccl-cu12==2.21.5
+    # via torch
+nvidia-nvjitlink-cu12==12.4.127
+    # via nvidia-cusolver-cu12
+    # via nvidia-cusparse-cu12
+    # via torch
+nvidia-nvtx-cu12==12.4.127
+    # via torch
 openai==1.58.1
     # via ktto
 packaging==24.2
     # via accelerate
     # via datasets
     # via huggingface-hub
+    # via ipykernel
     # via peft
+    # via tensorboard
     # via transformers
 pandas==2.2.3
     # via datasets
     # via ktto
+parso==0.8.4
+    # via jedi
 peft==0.14.0
     # via ktto
+pexpect==4.9.0
+    # via ipython
 pillow==11.0.0
     # via torchvision
+platformdirs==4.3.6
+    # via jupyter-core
+prompt-toolkit==3.0.48
+    # via ipython
 propcache==0.2.1
     # via aiohttp
     # via yarl
+protobuf==5.29.2
+    # via tensorboard
 psutil==6.1.1
     # via accelerate
+    # via ipykernel
     # via peft
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.3
+    # via stack-data
 pyarrow==18.1.0
     # via datasets
 pydantic==2.10.4
@@ -123,8 +211,10 @@ pydantic==2.10.4
 pydantic-core==2.27.2
     # via pydantic
 pygments==2.18.0
+    # via ipython
     # via rich
 python-dateutil==2.9.0.post0
+    # via jupyter-client
     # via pandas
 pytz==2024.2
     # via pandas
@@ -134,6 +224,9 @@ pyyaml==6.0.2
     # via huggingface-hub
     # via peft
     # via transformers
+pyzmq==26.2.0
+    # via ipykernel
+    # via jupyter-client
 regex==2024.11.6
     # via transformers
 requests==2.32.3
@@ -147,17 +240,27 @@ safetensors==0.4.5
     # via accelerate
     # via peft
     # via transformers
+setuptools==75.6.0
+    # via tensorboard
 six==1.17.0
     # via python-dateutil
+    # via tensorboard
 sniffio==1.3.1
     # via anyio
     # via openai
+stack-data==0.6.3
+    # via ipython
 sympy==1.13.1
     # via torch
+tensorboard==2.18.0
+    # via ktto
+tensorboard-data-server==0.7.2
+    # via tensorboard
 tokenizers==0.21.0
     # via transformers
 torch==2.5.1
     # via accelerate
+    # via bitsandbytes
     # via ktto
     # via peft
     # via torchaudio
@@ -166,21 +269,36 @@ torchaudio==2.5.1
     # via ktto
 torchvision==0.20.1
     # via ktto
+tornado==6.4.2
+    # via ipykernel
+    # via jupyter-client
 tqdm==4.67.1
     # via datasets
     # via huggingface-hub
     # via openai
     # via peft
     # via transformers
+traitlets==5.14.3
+    # via comm
+    # via ipykernel
+    # via ipython
+    # via ipywidgets
+    # via jupyter-client
+    # via jupyter-core
+    # via matplotlib-inline
 transformers==4.47.1
     # via ktto
     # via peft
     # via trl
+triton==3.1.0
+    # via torch
 trl==0.13.0
     # via ktto
 typing-extensions==4.12.2
     # via anyio
+    # via bitsandbytes
     # via huggingface-hub
+    # via ipython
     # via openai
     # via pydantic
     # via pydantic-core
@@ -189,6 +307,12 @@ tzdata==2024.2
     # via pandas
 urllib3==2.3.0
     # via requests
+wcwidth==0.2.13
+    # via prompt-toolkit
+werkzeug==3.1.3
+    # via tensorboard
+widgetsnbextension==4.0.13
+    # via ipywidgets
 xxhash==3.5.0
     # via datasets
 yarl==1.18.3
