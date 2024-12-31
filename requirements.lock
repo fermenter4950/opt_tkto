@@ -170,6 +170,8 @@ pygments==2.18.0
     # via rich
 python-dateutil==2.9.0.post0
     # via pandas
+python-dotenv==1.0.1
+    # via ktto
 pytz==2024.2
     # via pandas
 pyyaml==6.0.2
