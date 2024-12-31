@@ -77,15 +77,17 @@ class KTTOTrainer:
             max_steps=300,
             per_device_train_batch_size=2,
             gradient_accumulation_steps=1,
-            optim="paged_adamw_32bit",
             learning_rate=2e-4,
-            lr_scheduler_type="cosine",
             max_grad_norm=0.3,
             warmup_ratio=0.03,
             weight_decay=0.001,
             save_steps=50,
+            lr_scheduler_type="cosine",
             report_to="tensorboard",
+            optim="paged_adamw_32bit",
             gradient_checkpointing=True,
+            max_prompt_length=128,
+            max_length=512,
         )
 
         self.peft_config = PeftConfig(
@@ -151,6 +153,7 @@ class KTTOTrainer:
                                 input_ids=input_ids,
                                 do_sample=True,
                                 temperature=0.7,
+                                max_length=512,
                                 pad_token_id=self.tokenizer.eos_token_id,
                             )
                             content = self.tokenizer.decode(

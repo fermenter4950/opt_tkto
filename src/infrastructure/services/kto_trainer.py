@@ -18,12 +18,15 @@ class KTOConfig:
     warmup_ratio: float
     weight_decay: float
     save_steps: int
-    fp16: bool = True
-    bf16: bool = False
-    optim: str = "paged_adamw_32bit"
-    lr_scheduler_type: str = "cosine"
-    report_to: str = "tensorboard"
-    gradient_checkpointing: bool = True
+    optim: str
+    lr_scheduler_type: str
+    report_to: str
+    fp16: bool
+    bf16: bool
+    gradient_checkpointing: bool
+    remove_unused_columns: bool
+    max_prompt_length: int
+    max_length: int
 
 
 @dataclass
@@ -69,6 +72,9 @@ class KTOTrainer:
             save_steps=self.args.save_steps,
             report_to=self.args.report_to,
             gradient_checkpointing=self.args.gradient_checkpointing,
+            remove_unused_columns=self.args.remove_unused_columns,
+            max_prompt_length=self.args.max_prompt_length,
+            max_length=self.args.max_length,
         )
 
         peft_config = peft.LoraConfig(
