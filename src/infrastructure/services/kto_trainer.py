@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 import peft
 import trl
@@ -21,18 +22,18 @@ class KTOConfig:
     bf16: bool = False
     optim: str = "paged_adamw_32bit"
     lr_scheduler_type: str = "cosine"
-    report_to = "tensorboard"
+    report_to: str = "tensorboard"
     gradient_checkpointing: bool = True
 
 
 @dataclass
 class PeftConfig:
+    target_modules: List[str]
     r: int = 64
     lora_alpha: int = 16
     lora_dropout: float = 0.1
     bias: str = "none"
     task_type: str = "CAUSAL_LM"
-    target_modules = ["q_proj", "v_pro"]
 
 
 class KTOTrainer:

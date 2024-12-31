@@ -4,13 +4,13 @@ from typing import List, Optional
 
 import pandas as pd
 import torch
-from datasets import Dataset
+from datasets import Dataset, DatasetInfo
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from src.application.data_creator import DataCreator
 from src.application.interfaces.effect_predictor import EffectPredictor
-from src.domain import PCLSet, UserCharacteristics
+from src.domain import Completion, PCLSet, Prompt, UserCharacteristics
 from src.infrastructure.services.kto_trainer import KTOConfig, KTOTrainer, PeftConfig
 
 
@@ -63,6 +63,7 @@ class KTTOTrainer:
 
     def _train_iteration(
         self,
+        iteration: int,
         pcl_set_list: List[PCLSet],
     ):
         """1回の追加学習を実行"""
@@ -92,13 +93,18 @@ class KTTOTrainer:
             lora_alpha=16,
             lora_dropout=0.1,
             bias="none",
-            target_modules=None,
+            target_modules=["q_proj", "v_pro"],
             task_type="CAUSAL_LM",
         )
 
         pcl_sets = [pcl_set.to_dict() for pcl_set in pcl_set_list]
         pcl_df = pd.DataFrame(pcl_sets)
-        dataset = Dataset.from_pandas(pcl_df)
+        dataset = Dataset.from_pandas(
+            pcl_df,
+            info=DatasetInfo(
+                dataset_name=f"pcl_dataset_{iteration}",
+            ),
+        )
         dataset.save_to_disk(self._get_output_dir(self._current_iteration))
 
         if self.peft_path is not None:
@@ -130,7 +136,7 @@ class KTTOTrainer:
     def train(self):
         """複数回の追加学習を実行"""
 
-        for _ in range(self.config.n_iter):
+        for i in range(self.config.n_iter):
 
             def _message_generator(prompt: Prompt, k: int) -> List[Completion]:
                 chat = [{"role": "user", "content": prompt.content}]
@@ -139,17 +145,25 @@ class KTTOTrainer:
                 ).to(self.device)
                 completions = []
                 for _ in range(k):
-                    output_ids = self.model.generate(
-                        input_ids=input_ids,
-                        do_sample=True,
-                        temperature=0.7,
-                        pad_token_id=self.tokenizer.eos_token_id,
-                    )
-                    content = self.tokenizer.decode(
-                        output_ids[0], skip_special_tokens=True
-                    )
-                    assistant = content.split("assistant")[1].strip()
-                    completion = Completion(content=assistant)
+                    while True:
+                        try:
+                            output_ids = self.model.generate(
+                                input_ids=input_ids,
+                                do_sample=True,
+                                temperature=0.7,
+                                pad_token_id=self.tokenizer.eos_token_id,
+                            )
+                            content = self.tokenizer.decode(
+                                output_ids[0], skip_special_tokens=True
+                            )
+                            assistant = content.split("assistant")[1]
+                            completion = Completion(content=assistant)
+                            print("Completion:", completion)
+                            break
+                        except Exception:
+                            print("Error occurred. Retrying...")
+                            pass
+
                     completions.append(completion)
                 return completions
 
@@ -165,7 +179,7 @@ class KTTOTrainer:
                 characteristics_list=self.characteristics_list,
                 k=self.config.k,
             )
-            output_dir = self._train_iteration(pcl_set_list)
+            output_dir = self._train_iteration(i, pcl_set_list)
             results.append(output_dir)
             self._current_iteration += 1
 

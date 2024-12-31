@@ -15,5 +15,5 @@ class PCLSet:
         return {
             "prompt": self.prompt.content,
             "completion": self.completion.content,
-            "label": self.label.value,
+            "label": self.label == Label.POSITIVE,
         }

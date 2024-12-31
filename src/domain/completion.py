@@ -19,7 +19,7 @@ class Completion:
         self.content = content
         self.thought, self.response = self._decompose(content)
 
-    def _decompose(content: str) -> Tuple[str, str]:
+    def _decompose(self, content: str) -> Tuple[str, str]:
         data = json.loads(content)
         thought: str = data["thought"]
         message: str = data["message"]

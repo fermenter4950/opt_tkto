@@ -35,7 +35,7 @@ class DataCreator:
         k: int,
     ):
         prompt = Prompt(base_message, characteristic)
-        completions = self.message_generator(prompt.content, k)
+        completions = self.message_generator(prompt, k)
         pcl_set_list: List[PCLSet] = []
         for completion in completions:
             effect = self.effect_predictor.predict(completion.response, characteristic)
