@@ -87,7 +87,7 @@ class KTTOTrainer:
             optim="paged_adamw_32bit",
             gradient_checkpointing=True,
             max_prompt_length=128,
-            max_length=512,
+            max_length=2**15,
         )
 
         self.peft_config = PeftConfig(
@@ -153,7 +153,7 @@ class KTTOTrainer:
                                 input_ids=input_ids,
                                 do_sample=True,
                                 temperature=0.7,
-                                max_length=512,
+                                max_length=2**15,
                                 pad_token_id=self.tokenizer.eos_token_id,
                             )
                             content = self.tokenizer.decode(

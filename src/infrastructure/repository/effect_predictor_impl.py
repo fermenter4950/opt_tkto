@@ -13,8 +13,8 @@ class EffectPredictorImpl(EffectPredictor):
 '''
 
 ### 受信者の特性 ###
-性別: {sex}
-年代: {age}
+性別: {gender}
+年代: {age_groupt}
 行動変容ステージ: {stage}
 
 ### タスク ###
@@ -42,7 +42,7 @@ class EffectPredictorImpl(EffectPredictor):
         model: str,
     ):
         self.model = model
-        self.client = OpenAI(api_key)
+        self.client = OpenAI(api_key=api_key)
 
     def predict(
         self,
