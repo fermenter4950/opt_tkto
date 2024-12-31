@@ -11,3 +11,4 @@ wheels/
 notebooks/
 kto_lora_iterations/
 data/
+.env
