@@ -8,3 +8,5 @@ wheels/
 
 # venv
 .venv
+notebooks/
+kto_lora_iterations/
