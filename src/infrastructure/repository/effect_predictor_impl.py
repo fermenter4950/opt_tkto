@@ -14,7 +14,7 @@ class EffectPredictorImpl(EffectPredictor):
 
 ### 受信者の特性 ###
 性別: {gender}
-年代: {age_groupt}
+年代: {age_group}
 行動変容ステージ: {stage}
 
 ### タスク ###

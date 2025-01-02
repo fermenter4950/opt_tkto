@@ -161,10 +161,10 @@ class KTTOTrainer:
                             )
                             assistant = content.split("assistant")[1]
                             completion = Completion(content=assistant)
-                            print("Completion:", completion)
+                            print("Completion:", completion, flush=True)
                             break
                         except Exception:
-                            print("Error occurred. Retrying...")
+                            print("Error occurred. Retrying...", flush=True)
                             pass
 
                     completions.append(completion)
