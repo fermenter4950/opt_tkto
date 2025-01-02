@@ -12,3 +12,5 @@ notebooks/
 kto_lora_iterations/
 data/
 .env
+
+output.log
