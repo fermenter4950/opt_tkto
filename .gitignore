@@ -10,6 +10,7 @@ wheels/
 .venv
 notebooks/
 kto_lora_iterations/
+tkto_output/
 data/
 .env
 
