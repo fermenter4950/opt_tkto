@@ -10,7 +10,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from src.application.data_creator import DataCreator
 from src.application.interfaces.effect_predictor import EffectPredictor
-from src.domain import Completion, PCLSet, Prompt, UserCharacteristics
+from src.domain import Completion, Instruction, PCLSet, UserCharacteristics
 from src.infrastructure.services.kto_trainer import KTOConfig, KTOTrainer, PeftConfig
 
 
@@ -70,6 +70,22 @@ class KTTOTrainer:
         # トレーナーの設定と学習実行
         output_dir = self._get_output_dir(self._current_iteration)
 
+        pcl_sets = [pcl_set.to_dict() for pcl_set in pcl_set_list]
+        pcl_df = pd.DataFrame(pcl_sets)
+        dataset = Dataset.from_pandas(
+            pcl_df,
+            info=DatasetInfo(
+                dataset_name=f"pcl_dataset_{iteration}",
+            ),
+        )
+        dataset.save_to_disk(self._get_output_dir(self._current_iteration))
+
+        if self.peft_path is not None:
+            self.model = PeftModel.from_pretrained(
+                self.base_model,
+                self.peft_path,
+            ).to(self.device)
+
         self.kto_config = KTOConfig(
             output_dir=output_dir,
             fp16=True,
@@ -86,6 +102,7 @@ class KTTOTrainer:
             report_to="tensorboard",
             optim="paged_adamw_32bit",
             gradient_checkpointing=True,
+            remove_unused_columns=True,
             max_prompt_length=128,
             max_length=2**15,
         )
@@ -98,22 +115,6 @@ class KTTOTrainer:
             target_modules=["q_proj", "v_pro"],
             task_type="CAUSAL_LM",
         )
-
-        pcl_sets = [pcl_set.to_dict() for pcl_set in pcl_set_list]
-        pcl_df = pd.DataFrame(pcl_sets)
-        dataset = Dataset.from_pandas(
-            pcl_df,
-            info=DatasetInfo(
-                dataset_name=f"pcl_dataset_{iteration}",
-            ),
-        )
-        dataset.save_to_disk(self._get_output_dir(self._current_iteration))
-
-        if self.peft_path is not None:
-            self.model = PeftModel.from_pretrained(
-                self.base_model,
-                self.peft_path,
-            ).to(self.device)
 
         trainer = KTOTrainer(
             model=self.model,
@@ -140,7 +141,7 @@ class KTTOTrainer:
 
         for i in range(self.config.n_iter):
 
-            def _message_generator(prompt: Prompt, k: int) -> List[Completion]:
+            def _message_generator(prompt: Instruction, k: int) -> List[Completion]:
                 chat = [{"role": "user", "content": prompt.content}]
                 input_ids = self.tokenizer.apply_chat_template(
                     chat, return_tensors="pt"
@@ -159,14 +160,51 @@ class KTTOTrainer:
                             content = self.tokenizer.decode(
                                 output_ids[0], skip_special_tokens=True
                             )
-                            assistant = content.split("assistant")[1]
+                            assistant = content.split("assistant")[-1]
                             completion = Completion(content=assistant)
                             print("Completion:", completion, flush=True)
                             break
                         except Exception:
-                            print("Error occurred. Retrying...", flush=True)
-                            pass
-
+                            try:
+                                print("Error occurred. Retrying...", flush=True)
+                                retry_chat = [
+                                    {"role": "user", "content": prompt.content},
+                                    {
+                                        "role": "assistant",
+                                        "content": assistant,
+                                    },
+                                    {
+                                        "role": "user",
+                                        "content": """Json形式を満たしていません。必ず以下のスキーマを満たすJsonオブジェクト出力してください
+{
+  "thought": string,
+  "message": string
+}""",
+                                    },
+                                ]
+                                input_ids = self.tokenizer.apply_chat_template(
+                                    retry_chat,
+                                    return_tensors="pt",
+                                ).to(self.device)
+                                output_ids = self.model.generate(
+                                    input_ids=input_ids,
+                                    do_sample=True,
+                                    temperature=0.7,
+                                    max_length=2**15,
+                                    pad_token_id=self.tokenizer.eos_token_id,
+                                )
+                                content = self.tokenizer.decode(
+                                    output_ids[0], skip_special_tokens=True
+                                )
+                                assistant = content.split("assistant")[-1]
+                                completion = Completion(content=assistant)
+                                print("Completion:", completion, flush=True)
+                                break
+                            except Exception:
+                                print(
+                                    "Error occurred on Retry. Retrying...", flush=True
+                                )
+                                continue
                     completions.append(completion)
                 return completions
 
@@ -195,14 +233,14 @@ if __name__ == "__main__":
         BehaviorStage,
         Completion,
         Gender,
+        Instruction,
         Label,
         PCLSet,
-        Prompt,
     )
 
     pcl_set_list = [
         PCLSet(
-            prompt=Prompt(
+            prompt=Instruction(
                 base_message="Hello, how are you?",
                 characteristics=UserCharacteristics(
                     age_group=AgeGroup.FORTIES_TO_FIFTIES,
@@ -217,7 +255,7 @@ if __name__ == "__main__":
             label=Label.NEGATIVE,
         ),
         PCLSet(
-            prompt=Prompt(
+            prompt=Instruction(
                 base_message="Hello, how are you?",
                 characteristics=UserCharacteristics(
                     age_group=AgeGroup.FORTIES_TO_FIFTIES,

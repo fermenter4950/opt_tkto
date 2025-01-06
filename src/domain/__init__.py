@@ -1,7 +1,9 @@
 from src.domain.completion import Completion
+from src.domain.ktto_config import KTTOConfig, TrainingResult
 from src.domain.label import Label
 from src.domain.pcl_set import PCLSet
-from src.domain.prompt import Prompt
+from src.domain.prompt import Instruction
+from src.domain.tkto_config import TKTOConfig
 from src.domain.user_characteristics import (
     AgeGroup,
     BehaviorStage,
@@ -12,12 +14,15 @@ from src.domain.user_characteristics import (
 __all__ = [
     Completion,
     Label,
-    Prompt,
+    Instruction,
     AgeGroup,
     BehaviorStage,
     Gender,
     UserCharacteristics,
     PCLSet,
+    KTTOConfig,
+    TrainingResult,
+    TKTOConfig,
 ]
 
 if __name__ == "__main__":
@@ -28,7 +33,7 @@ if __name__ == "__main__":
     print(completion.thought)
     print(completion.response)
 
-    prompt = Prompt(
+    prompt = Instruction(
         "あなたの情報を教えてください。",
         UserCharacteristics(
             gender=Gender.FEMALE,

@@ -1,19 +1,17 @@
 from dataclasses import dataclass
 
-from src.domain.completion import Completion
 from src.domain.label import Label
-from src.domain.prompt import Prompt
 
 
 @dataclass
 class PCLSet:
-    prompt: Prompt
-    completion: Completion
+    prompt: str
+    completion: str
     label: Label
 
     def to_dict(self):
         return {
-            "prompt": self.prompt.content,
-            "completion": self.completion.content,
+            "prompt": self.prompt,
+            "completion": self.completion,
             "label": self.label == Label.POSITIVE,
         }

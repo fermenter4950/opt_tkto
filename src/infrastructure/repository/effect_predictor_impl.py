@@ -2,6 +2,9 @@ from openai import OpenAI
 
 from src.application.interfaces.effect_predictor import EffectPredictor
 from src.domain import Label, UserCharacteristics
+from src.domain.user_characteristics import age_group
+from src.domain.user_characteristics.behavior_stage import BehaviorStage
+from src.domain.user_characteristics.gender import Gender
 
 
 class EffectPredictorImpl(EffectPredictor):
@@ -55,16 +58,46 @@ class EffectPredictorImpl(EffectPredictor):
             gender=characteristics.gender.value,
             stage=characteristics.stage.value,
         )
+        messages = [
+            {"role": "system", "content": self.SYSTEM},
+            {"role": "user", "content": prompt},
+        ]
         response = self.client.chat.completions.create(
             model=self.model,
-            messages=[
-                {"role": "system", "content": self.SYSTEM},
-                {"role": "user", "content": prompt},
-            ],
+            messages=messages,
+            temperature=1,
         )
 
+        print(messages)
+        print(response)
+        print(response.choices)
+
         content = response.choices[0].message.content
+        print(content)
 
         if "negative" in content:
             return Label.NEGATIVE
         return Label.POSITIVE
+
+
+if __name__ == "__main__":
+    import os
+
+    from dotenv import load_dotenv
+
+    load_dotenv(".env")
+
+    effect_predictor = EffectPredictorImpl(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        model="gpt-3.5-turbo",
+    )
+
+    completion = "＼✨運動を始めよう✨／\u3000運動を始めるきっかけは人それぞれ。でも、始める前には「何を始めればいいのかわからない」や「面倒くさい」などの不安や迷いはつきものです。\u3000でも、運動を始めることで、ストレスの解消や体重の減少、睡眠の質の改善など、多くのメリットが得られます。\u3000はじめは短い時間や、好きな運動から始めてみてください。徐々に時間や種類を増やし、運動を習慣化することが大切です。\u3000是非、運動を始めて健康な生活を手に入れましょう！#ラビユキ\u3000#Domingo https://t.co/UbtgxgNSCb"
+    characteristics = UserCharacteristics(
+        gender=Gender.MALE,
+        age_group=age_group.AgeGroup.FORTIES_TO_FIFTIES,
+        stage=BehaviorStage.CONTEMPLATION_TO_PREPARATION,
+    )
+
+    label = effect_predictor.predict(completion, characteristics)
+    print(label)

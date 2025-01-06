@@ -42,6 +42,10 @@ charset-normalizer==3.4.1
 comm==0.2.2
     # via ipykernel
     # via ipywidgets
+contourpy==1.3.1
+    # via matplotlib
+cycler==0.12.1
+    # via matplotlib
 datasets==3.2.0
     # via trl
 debugpy==1.8.11
@@ -61,6 +65,8 @@ filelock==3.16.1
     # via torch
     # via transformers
     # via triton
+fonttools==4.55.3
+    # via matplotlib
 frozenlist==1.5.0
     # via aiohttp
     # via aiosignal
@@ -105,6 +111,8 @@ jupyter-core==5.7.2
     # via jupyter-client
 jupyterlab-widgets==3.0.13
     # via ipywidgets
+kiwisolver==1.4.8
+    # via matplotlib
 markdown==3.7
     # via tensorboard
 markdown-it-py==3.0.0
@@ -112,6 +120,7 @@ markdown-it-py==3.0.0
 markupsafe==3.0.2
     # via jinja2
     # via werkzeug
+matplotlib==3.10.0
 matplotlib-inline==0.1.7
     # via ipykernel
     # via ipython
@@ -131,7 +140,9 @@ networkx==3.4.2
 numpy==2.2.1
     # via accelerate
     # via bitsandbytes
+    # via contourpy
     # via datasets
+    # via matplotlib
     # via pandas
     # via peft
     # via tensorboard
@@ -173,6 +184,7 @@ packaging==24.2
     # via datasets
     # via huggingface-hub
     # via ipykernel
+    # via matplotlib
     # via peft
     # via tensorboard
     # via transformers
@@ -186,6 +198,7 @@ peft==0.14.0
 pexpect==4.9.0
     # via ipython
 pillow==11.0.0
+    # via matplotlib
     # via torchvision
 platformdirs==4.3.6
     # via jupyter-core
@@ -213,8 +226,11 @@ pydantic-core==2.27.2
 pygments==2.18.0
     # via ipython
     # via rich
+pyparsing==3.2.1
+    # via matplotlib
 python-dateutil==2.9.0.post0
     # via jupyter-client
+    # via matplotlib
     # via pandas
 python-dotenv==1.0.1
     # via ktto
@@ -277,6 +293,7 @@ tornado==6.4.2
 tqdm==4.67.1
     # via datasets
     # via huggingface-hub
+    # via ktto
     # via openai
     # via peft
     # via transformers

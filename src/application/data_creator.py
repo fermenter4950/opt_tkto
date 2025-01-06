@@ -1,14 +1,14 @@
 from typing import Callable, List
 
 from src.application.interfaces import EffectPredictor
-from src.domain import PCLSet, Prompt, UserCharacteristics
+from src.domain import Instruction, PCLSet, UserCharacteristics
 from src.domain.completion import Completion
 
 
 class DataCreator:
     def __init__(
         self,
-        message_generator: Callable[[Prompt, int], List[Completion]],
+        message_generator: Callable[[Instruction, int], List[Completion]],
         effect_predictor: EffectPredictor,
     ):
         self.message_generator = message_generator
@@ -34,7 +34,7 @@ class DataCreator:
         characteristic: UserCharacteristics,
         k: int,
     ):
-        prompt = Prompt(base_message, characteristic)
+        prompt = Instruction(base_message, characteristic)
         completions = self.message_generator(prompt, k)
         pcl_set_list: List[PCLSet] = []
         for completion in completions:
