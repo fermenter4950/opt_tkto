@@ -72,7 +72,7 @@ class TKTOTrainer:
                     {"role": "assistant", "content": assistant},
                     {
                         "role": "user",
-                        "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください。",
+                        "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください",
                     },
                 ]
                 input_ids = self.tokenizer.apply_chat_template(
