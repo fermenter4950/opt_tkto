@@ -32,7 +32,16 @@ class TKTOTrainer:
         self.prompts = prompts
         self.config = config
         self.base_model = base_model
-        self.model = base_model
+        self.peft_path = peft_path
+        if peft_path is not None:
+            self.model = PeftModel.from_pretrained(
+                base_model,
+                peft_path,
+                tokenizer=tokenizer,
+                device=base_model.device,
+            )
+        else:
+            self.model = base_model
         self.effect_predictor = effect_predictor
         self.tokenizer = tokenizer
         self.metadata = metadata
@@ -68,11 +77,35 @@ class TKTOTrainer:
                 return completion
             except Exception:
                 retry_chat = [
-                    {"role": "user", "content": prompt},
-                    {"role": "assistant", "content": assistant},
+                    # {"role": "user", "content": prompt},
+                    # {"role": "assistant", "content": assistant},
+                    # {
+                    #     "role": "user",
+                    #     "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください",
+                    # },
                     {
                         "role": "user",
-                        "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください",
+                        "content": f"""
+あなたは，指定されたスキーマのJSONオブジェクトを生成するアシスタントです．
+以下の###assistant###をもとに，指定されたスキーマに従ったJSONオブジェクトを生成してください．
+
+###assistant###
+{assistant}
+
+###スキーマ###
+必ず以下のスキーマに従ったJSONオブジェクト作成してください．
+絶対にそのJsonオブジェクトのみを出力してください．
+{{
+  "thought": "string",
+  "response": "string"
+}}
+
+###注意###
+1. 全てのフィールド名と値をダブルクォート(")で囲みなさい
+2. JSON全体を波括弧{{}}で囲みなさい
+3. 各フィールドがカンマ(,)で区切りなさい
+4. 最後の要素の後にカンマをつけるな
+""",
                     },
                 ]
                 input_ids = self.tokenizer.apply_chat_template(
@@ -94,7 +127,13 @@ class TKTOTrainer:
                     completion = Completion(content=assistant)
                     return completion
                 except Exception:
-                    continue
+                    assistant = assistant.replace("「", '"').replace("」", '"')
+                    assistant = assistant + "}"
+                    try:
+                        completion = Completion(content=assistant)
+                        return completion
+                    except Exception:
+                        continue
 
     def _generate_k_completions(self, prompt: str) -> List[Completion]:
         completions = []

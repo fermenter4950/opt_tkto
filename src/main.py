@@ -77,6 +77,9 @@ if __name__ == "__main__":
         tokenizer=tokenizer,
         effect_predictor=effect_predictor,
         metadata=metadata,
+        initial_epoch=0,
+        initial_step=1,
+        peft_path="tkto_output/epoch_0/step_0",
     )
 
     trainer.train()
