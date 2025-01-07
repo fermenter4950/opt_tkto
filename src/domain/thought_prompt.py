@@ -1,5 +1,6 @@
 import json
 import re
+from typing import Tuple
 
 
 class ThoughtPrompt:
@@ -41,7 +42,7 @@ class ThoughtPrompt:
         return prompt
 
     @staticmethod
-    def json_decoder(content: str) -> dict:
+    def json_decoder(content: str) -> Tuple[str, str]:
         pattern = r'"([^"]*)"'  # ダブルクォートで囲まれた部分を検出
 
         def replace_newlines(match):

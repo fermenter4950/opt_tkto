@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
     config = TKTOConfig(
         n_iter=5,
-        batch_size=120,
+        batch_size=12 * 15,
         num_of_output=3,
         output_dir="tkto_output",
     )

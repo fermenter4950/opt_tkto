@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 import tqdm
@@ -25,6 +25,9 @@ class TKTOTrainer:
         effect_predictor: EffectPredictor,
         config: TKTOConfig,
         metadata: Dict[str, any],
+        initial_epoch: Optional[int] = None,
+        initial_step: Optional[int] = None,
+        peft_path: Optional[str] = None,
     ):
         self.prompts = prompts
         self.config = config
@@ -33,8 +36,8 @@ class TKTOTrainer:
         self.effect_predictor = effect_predictor
         self.tokenizer = tokenizer
         self.metadata = metadata
-        self._steps = 0
-        self._epochs = 0
+        self._steps = initial_step if initial_step is not None else 0
+        self._epochs = initial_epoch if initial_epoch is not None else 0
 
     def _get_output_dir(self) -> str:
         """iteration用の出力ディレクトリパスを生成"""
@@ -69,7 +72,7 @@ class TKTOTrainer:
                     {"role": "assistant", "content": assistant},
                     {
                         "role": "user",
-                        "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください",
+                        "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください。",
                     },
                 ]
                 input_ids = self.tokenizer.apply_chat_template(
@@ -168,7 +171,10 @@ class TKTOTrainer:
         for prompt, characteristics in zip(selected_prompts, characteristics):
             completions = prompt_dict[prompt]["completions"]
             for completion in completions:
-                label = self.effect_predictor.predict(completion, characteristics)
+                label = self.effect_predictor.predict(
+                    completion.response,
+                    characteristics,
+                )
                 labels.append(label)
             prompt_dict[prompt]["labels"] = labels
 

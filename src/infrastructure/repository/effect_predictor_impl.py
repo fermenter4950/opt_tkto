@@ -68,16 +68,23 @@ class EffectPredictorImpl(EffectPredictor):
             temperature=1,
         )
 
-        print(messages)
-        print(response)
-        print(response.choices)
-
         content = response.choices[0].message.content
-        print(content)
+        negative_similarity = self._jaccard_similarity(content, "negative")
+        positive_similarity = self._jaccard_similarity(content, "positive")
 
-        if "negative" in content:
-            return Label.NEGATIVE
-        return Label.POSITIVE
+        # 類似度が高い方を返す
+        return (
+            Label.NEGATIVE
+            if negative_similarity > positive_similarity
+            else Label.POSITIVE
+        )
+
+    @staticmethod
+    def _jaccard_similarity(str1, str2):
+        a = set(str1.split())
+        b = set(str2.split())
+        c = a.intersection(b)
+        return float(len(c)) / (len(a) + len(b) - len(c))
 
 
 if __name__ == "__main__":
