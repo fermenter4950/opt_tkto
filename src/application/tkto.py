@@ -2,7 +2,6 @@ import os
 from typing import Dict, List, Optional
 
 import pandas as pd
-import tqdm
 from datasets import Dataset, DatasetInfo
 from peft import PeftModel
 from transformers import PreTrainedModel, PreTrainedTokenizer
@@ -251,8 +250,8 @@ class TKTOTrainer:
         )
 
     def train(self):
-        for _ in tqdm.tqdm(range(self.config.n_iter)):
-            for _ in tqdm.tqdm(range(len(self.prompts) // self.config.batch_size)):
+        while self._epochs < self.config.n_iter:
+            while self._steps < len(self.prompts) // self.config.batch_size:
                 start = self._steps * self.config.batch_size
                 end = (self._steps + 1) * self.config.batch_size
                 selected_prompts = self.prompts[
@@ -263,6 +262,5 @@ class TKTOTrainer:
                 ]
                 self.train_one_step(selected_prompts, characteristics)
                 self._steps += 1
-
-        self._steps = 0
-        self._epochs += 1
+            self._steps = 0
+            self._epochs += 1

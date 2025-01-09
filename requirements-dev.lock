@@ -57,6 +57,8 @@ dill==0.3.8
     # via multiprocess
 distro==1.9.0
     # via openai
+et-xmlfile==2.0.0
+    # via openpyxl
 executing==2.1.0
     # via stack-data
 filelock==3.16.1
@@ -179,6 +181,7 @@ nvidia-nvtx-cu12==12.4.127
     # via torch
 openai==1.58.1
     # via ktto
+openpyxl==3.1.5
 packaging==24.2
     # via accelerate
     # via datasets
