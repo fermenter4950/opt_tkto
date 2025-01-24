@@ -48,17 +48,50 @@ class ThoughtPrompt:
         def replace_newlines(match):
             return '"' + match.group(1).replace("\n", "\\n") + '"'
 
-        try:
-            content_escaped = re.sub(pattern, replace_newlines, content)
-            data = json.loads(content_escaped)
-        except json.JSONDecodeError as e:
-            raise ValueError("JSON形式のデータが見つかりません") from e
+        content = re.sub(pattern, replace_newlines, content)
 
-        if "thought" not in data:
-            raise ValueError("thought フィールドが見つかりません")
-        if "response" not in data:
-            raise ValueError("response フィールドが見つかりません")
+        # validation
+        is_valid, error_message = _validate_response(content)
+        if not is_valid:
+            raise ValueError(error_message)
+
+        # JSON文字列をパース
+        data = json.loads(content)
 
         thought: str = data["thought"]
         response: str = data["response"]
         return thought, response
+
+
+def _validate_response(json_str: str) -> Tuple[bool, str | None]:
+    """
+    JSON文字列がスキーマに適合するかを検証する関数
+
+    Args:
+        json_str (str): 検証するJSON文字列
+
+    Returns:
+        Tuple[bool, str | None]: (バリデーション結果, エラーメッセージ)
+    """
+    try:
+        # JSON文字列をパース
+        data = json.loads(json_str)
+
+        # dictかどうかの確認
+        if not isinstance(data, dict):
+            return False, "データはオブジェクト型である必要があります"
+
+        # 必須フィールドの確認
+        required_fields = ["thought", "response"]
+        for field in required_fields:
+            if field not in data:
+                return False, f"必須フィールド '{field}' がありません"
+            if not isinstance(data[field], str):
+                return False, f"フィールド '{field}' は文字列である必要があります"
+
+        return True, None
+
+    except json.JSONDecodeError as e:
+        return False, f"不正なJSON形式です: {str(e)}"
+    except Exception as e:
+        return False, f"予期せぬエラーが発生しました: {str(e)}"

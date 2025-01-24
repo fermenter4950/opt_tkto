@@ -20,6 +20,7 @@ from src.infrastructure.repository.effect_predictor_impl import EffectPredictorI
 
 if __name__ == "__main__":
     load_dotenv(".env")
+    output_dir = os.getenv("OUTPUT_DIR")
 
     effect_predictor = EffectPredictorImpl(
         api_key=os.getenv("OPENAI_API_KEY"),
@@ -59,15 +60,17 @@ if __name__ == "__main__":
         n_iter=5,
         batch_size=12 * 15,
         num_of_output=3,
-        output_dir="tkto_output",
+        output_dir=os.path.join(output_dir, "2024-01-14"),
     )
 
     base_model_path = "elyza/Llama-3-ELYZA-JP-8B"
     tokenizer = AutoTokenizer.from_pretrained(base_model_path)
     tokenizer.pad_token = tokenizer.eos_token
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == "cpu":
+        raise ValueError("GPU is not available.")
     base_model = AutoModelForCausalLM.from_pretrained(
-        base_model_path, torch_dtype=torch.bfloat16, device_map={"": 0}
+        base_model_path, torch_dtype=torch.bfloat16, device_map="auto"
     ).to(device)
 
     trainer = TKTOTrainer(
@@ -77,9 +80,8 @@ if __name__ == "__main__":
         tokenizer=tokenizer,
         effect_predictor=effect_predictor,
         metadata=metadata,
-        initial_epoch=0,
+        initial_epoch=1,
         initial_step=1,
-        peft_path="tkto_output/epoch_0/step_0",
     )
 
     trainer.train()

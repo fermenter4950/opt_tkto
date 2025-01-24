@@ -74,37 +74,13 @@ class TKTOTrainer:
             try:
                 completion = Completion(content=assistant)
                 return completion
-            except Exception:
+            except Exception as e:
                 retry_chat = [
-                    # {"role": "user", "content": prompt},
-                    # {"role": "assistant", "content": assistant},
-                    # {
-                    #     "role": "user",
-                    #     "content": "thought と response フィールドを持つ正しい形式のJsonオブジェクトのみを出力してください。必ず波括弧で囲ってください",
-                    # },
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": assistant},
                     {
                         "role": "user",
-                        "content": f"""
-あなたは，指定されたスキーマのJSONオブジェクトを生成するアシスタントです．
-以下の###assistant###をもとに，指定されたスキーマに従ったJSONオブジェクトを生成してください．
-
-###assistant###
-{assistant}
-
-###スキーマ###
-必ず以下のスキーマに従ったJSONオブジェクト作成してください．
-絶対にそのJsonオブジェクトのみを出力してください．
-{{
-  "thought": "string",
-  "response": "string"
-}}
-
-###注意###
-1. 全てのフィールド名と値をダブルクォート(")で囲みなさい
-2. JSON全体を波括弧{{}}で囲みなさい
-3. 各フィールドがカンマ(,)で区切りなさい
-4. 最後の要素の後にカンマをつけるな
-""",
+                        "content": f"出力はJsonオブジェクトのみです。以下のエラーが発生したので、出力を修正してください。\n{e}",
                     },
                 ]
                 input_ids = self.tokenizer.apply_chat_template(

@@ -31,6 +31,8 @@ asttokens==3.0.0
     # via stack-data
 attrs==24.3.0
     # via aiohttp
+    # via jsonschema
+    # via referencing
 bitsandbytes==0.45.0
     # via ktto
 certifi==2024.12.14
@@ -106,6 +108,10 @@ jinja2==3.1.5
     # via torch
 jiter==0.8.2
     # via openai
+jsonschema==4.23.0
+    # via ktto
+jsonschema-specifications==2024.10.1
+    # via jsonschema
 jupyter-client==8.6.3
     # via ipykernel
 jupyter-core==5.7.2
@@ -248,6 +254,9 @@ pyyaml==6.0.2
 pyzmq==26.2.0
     # via ipykernel
     # via jupyter-client
+referencing==0.35.1
+    # via jsonschema
+    # via jsonschema-specifications
 regex==2024.11.6
     # via transformers
 requests==2.32.3
@@ -256,6 +265,9 @@ requests==2.32.3
     # via transformers
 rich==13.9.4
     # via trl
+rpds-py==0.22.3
+    # via jsonschema
+    # via referencing
 ruff==0.8.4
 safetensors==0.4.5
     # via accelerate

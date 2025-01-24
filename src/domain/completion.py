@@ -1,3 +1,5 @@
+import json
+
 from src.domain.thought_prompt import ThoughtPrompt
 
 
@@ -17,3 +19,4 @@ class Completion:
     ):
         self.content = content
         self.thought, self.response = ThoughtPrompt.json_decoder(content)
+        self.content = json.dumps(json.loads(content), indent=4, ensure_ascii=False)
