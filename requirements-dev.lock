@@ -108,6 +108,8 @@ jinja2==3.1.5
     # via torch
 jiter==0.8.2
     # via openai
+joblib==1.4.2
+    # via scikit-learn
 jsonschema==4.23.0
     # via ktto
 jsonschema-specifications==2024.10.1
@@ -153,6 +155,8 @@ numpy==2.2.1
     # via matplotlib
     # via pandas
     # via peft
+    # via scikit-learn
+    # via scipy
     # via tensorboard
     # via torchvision
     # via transformers
@@ -273,6 +277,10 @@ safetensors==0.4.5
     # via accelerate
     # via peft
     # via transformers
+scikit-learn==1.6.1
+    # via ktto
+scipy==1.15.1
+    # via scikit-learn
 setuptools==75.6.0
     # via tensorboard
 six==1.17.0
@@ -289,6 +297,8 @@ tensorboard==2.18.0
     # via ktto
 tensorboard-data-server==0.7.2
     # via tensorboard
+threadpoolctl==3.5.0
+    # via scikit-learn
 tokenizers==0.21.0
     # via transformers
 torch==2.5.1

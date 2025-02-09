@@ -5,7 +5,6 @@ import torch
 from dotenv import load_dotenv
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from src.application.interfaces import effect_predictor
 from src.application.tkto import TKTOTrainer
 from src.domain import (
     AgeGroup,
@@ -16,15 +15,19 @@ from src.domain import (
 )
 from src.domain.prompt import Instruction
 from src.domain.tkto_config import TKTOConfig
-from src.infrastructure.repository.effect_predictor_impl import EffectPredictorImpl
+from src.infrastructure.repository.effect_predictor_bert import EffectPredictorBERT
 
 if __name__ == "__main__":
     load_dotenv(".env")
     output_dir = os.getenv("OUTPUT_DIR")
 
-    effect_predictor = EffectPredictorImpl(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        model=os.getenv("OPENAI_MODEL_ID"),
+    # effect_predictor = EffectPredictorImpl(
+    #     api_key=os.getenv("OPENAI_API_KEY"),
+    #     model=os.getenv("OPENAI_MODEL_ID"),
+    # )
+
+    effect_predictor = EffectPredictorBERT(
+        model_path="models/health_message_bert.pth",
     )
 
     messages = pd.read_csv("data/messages_sorted.csv")["message"].tolist()

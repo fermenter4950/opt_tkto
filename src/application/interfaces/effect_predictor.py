@@ -8,5 +8,6 @@ class EffectPredictor(ABC):
         self,
         completion: str,
         characteristics: UserCharacteristics,
+        threshold: float,
     ) -> Label:
         raise NotImplementedError()

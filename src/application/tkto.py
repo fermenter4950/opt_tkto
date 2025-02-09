@@ -188,6 +188,7 @@ class TKTOTrainer:
                 label = self.effect_predictor.predict(
                     completion.response,
                     characteristics,
+                    threshold=0.5,
                 )
                 labels.append(label)
             prompt_dict[prompt]["labels"] = labels
