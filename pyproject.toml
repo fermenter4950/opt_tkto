@@ -11,9 +11,12 @@ dependencies = [
     "trl>=0.13.0",
     "pandas>=2.2.3",
     "openai>=1.58.1",
-    "torch>=2.5.1",
-    "torchvision>=0.20.1",
-    "torchaudio>=2.5.1",
+    "torch==2.6.0",
+    "torchvision==0.21.0",
+    "torchaudio==2.6.0",
+  # torch cu124 の実行時ライブラリ（未指定だと .so が欠けることがある）
+    "nvidia-cudnn-cu12==9.1.0.70",
+    "nvidia-nccl-cu12==2.21.5",
     "tensorboard>=2.18.0",
     "bitsandbytes>=0.45.0",
     "python-dotenv>=1.0.1",
@@ -43,3 +46,14 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
+
+# CUDA 12.4 ドライバ向け（cu130 は本環境で GPU 未認識になる）
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu124" }
+torchvision = { index = "pytorch-cu124" }
+torchaudio = { index = "pytorch-cu124" }

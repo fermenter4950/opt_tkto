@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # )
 
     effect_predictor = EffectPredictorBERT(
-        model_path="models/health_message_bert.pth",
+        model_path="models/health_message_model.pth",
     )
 
     messages = pd.read_csv("data/messages_sorted.csv")["message"].tolist()
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     if device.type == "cpu":
         raise ValueError("GPU is not available.")
     base_model = AutoModelForCausalLM.from_pretrained(
-        base_model_path, torch_dtype=torch.bfloat16, device_map="auto"
+        base_model_path, dtype=torch.bfloat16, device_map="auto"
     ).to(device)
 
     trainer = TKTOTrainer(
