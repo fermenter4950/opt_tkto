@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -47,7 +49,10 @@ class HealthMessageBERT(nn.Module):
 class EffectPredictorBERT(EffectPredictor):
     def __init__(self, model_path: str):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = HealthMessageBERT("cl-tohoku/bert-base-japanese-v3")
+        bert_model = os.getenv(
+            "BERT_BASE_MODEL", "cl-tohoku/bert-base-japanese-v3"
+        )
+        self.model = HealthMessageBERT(bert_model)
 
         checkpoint = torch.load(model_path, map_location=self.device)
         self.model.load_state_dict(checkpoint["model_state_dict"])
@@ -77,14 +82,12 @@ class EffectPredictorBERT(EffectPredictor):
     ) -> Label:
         self.model.eval()
 
-        encoding = self.model.tokenizer.encode_plus(
+        encoding = self.model.tokenizer(
             message,
             add_special_tokens=True,
             max_length=512,
-            return_token_type_ids=False,
             padding="max_length",
             truncation=True,
-            return_attention_mask=True,
             return_tensors="pt",
         )
 
@@ -279,10 +282,13 @@ def main():
         train_loader,
         val_loader,
         num_epochs=10,
-        save_path="health_message_model.pth",
+        save_path=os.getenv(
+            "EFFECT_PREDICTOR_MODEL_PATH", "models/health_message_model.pth"
+        ),
     )
-    # 学習済みモデルを使って予測
-    predictor = EffectPredictorBERT("health_message_model.pth")
+    predictor = EffectPredictorBERT(
+        os.getenv("EFFECT_PREDICTOR_MODEL_PATH", "models/health_message_model.pth")
+    )
     prediction = predictor.predict(
         "運動は健康に良い影響を与えます",
         UserCharacteristics(

@@ -6,16 +6,19 @@ dist/
 wheels/
 *.egg-info
 result/
+/result
 test*
 
 # venv
 .venv
-notebooks/
+notebooks/.ipynb_checkpoints/
 kto_lora_iterations/
 tkto_output/
-data/
+/data/
 .env
 
 output.log
 outputs/
 models/
+/models
+*.log

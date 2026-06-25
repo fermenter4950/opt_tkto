@@ -1,0 +1,37 @@
+# 最適化 LLM-jp + 採点 Elyza（raw.csv 学習 pos/neg）
+run:
+  output_dir: result
+  timestamp_dir: true
+
+optimizer:
+  model: llm-jp-4-8b-thinking
+  reasoning_effort: low
+  max_new_tokens: 1024
+  temperature: 0.0
+  do_sample: false
+  length_penalty: 1.2
+  num_beams: 4
+
+scorer:
+  type: llm
+  model: elyza
+  adapter_path: models/scorer_elyza_raw_posneg
+
+tkto:
+  n_iter: 1
+  batch_size: 60
+  num_of_output: 1
+  initial_epoch: 0
+  initial_step: 0
+
+kto:
+  harmony_format: split
+  max_steps: 50
+  save_steps: 10
+  max_length: 1024
+  learning_rate: 5.0e-5
+  beta: 0.1
+
+data:
+  messages_csv: data/message_15.tsv
+  message_column: メッセージ

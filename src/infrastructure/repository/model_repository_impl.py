@@ -27,5 +27,3 @@ class ModelRepositoryImpl(ModelRepository):
 
     def _get_output_dir(self, iteration: int) -> str:
         return os.path.join(self.output_base_dir, f"iteration_{iteration}")
-        return os.path.join(self.output_base_dir, f"iteration_{iteration}")
-        return os.path.join(self.output_base_dir, f"iteration_{iteration}")

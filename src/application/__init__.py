@@ -1,6 +1,5 @@
-from src.application.interfaces import EffectPredictor, MessageGenerator
+from src.application.interfaces import EffectPredictor
 
 __all__ = [
-    MessageGenerator,
     EffectPredictor,
 ]

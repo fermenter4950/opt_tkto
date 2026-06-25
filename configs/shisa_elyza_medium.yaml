@@ -1,0 +1,40 @@
+# Shisa V2.1 8B 中規模テスト（llm-jp medium と同規模）
+# 最適化: shisa-v2.1-qwen3-8b（Qwen3 thinking 形式）
+# 採点: Elyza（llm-jp 実験と同じ scorer）
+run:
+  output_dir: result
+  timestamp_dir: true
+
+optimizer:
+  model: shisa-v2.1-qwen3-8b
+  max_new_tokens: 256
+  temperature: 0.0
+  do_sample: false
+  length_penalty: 1.2
+  num_beams: 4
+
+scorer:
+  type: llm
+  model: elyza
+  adapter_path: models/scorer_elyza_raw_posneg
+
+tkto:
+  n_iter: 2
+  batch_size: 60
+  num_of_output: 1
+  initial_epoch: 0
+  initial_step: 0
+
+kto:
+  harmony_format: split
+  max_steps: 50
+  save_steps: 10
+  max_length: 1024
+  learning_rate: 5.0e-5
+  beta: 0.3
+  min_valid_ratio: 0.0
+  one_epoch: true
+
+data:
+  messages_csv: data/message_15.tsv
+  message_column: メッセージ
